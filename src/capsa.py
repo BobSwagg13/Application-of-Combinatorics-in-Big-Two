@@ -157,6 +157,7 @@ class Player:
         checked = []
 
         for i in range(13):
+            # Check if we have 5 consecutive cards
             if(temp[i] + 1 in temp and 
             temp[i] + 2 in temp and 
             temp[i] + 3 in temp and 
@@ -165,6 +166,7 @@ class Player:
             temp[i] < 12):
                 
                 checked.append(temp[i])
+
                 cards_v1 = [(j, k) for j, k in self.hand if self.symbol_to_int(j) == temp[i]]
                 cards_v2 = [(j, k) for j, k in self.hand if self.symbol_to_int(j) == temp[i] + 1]
                 cards_v3 = [(j, k) for j, k in self.hand if self.symbol_to_int(j) == temp[i] + 2]
@@ -176,7 +178,7 @@ class Player:
                         for c3 in cards_v3:
                             for c4 in cards_v4:
                                 for c5 in cards_v5:
-                                    straight = tuple([c1, c2, c3, c4, c5]) 
+                                    straight = tuple([c1, c2, c3, c4, c5])   
                                     if straight not in big_straights:  
                                         big_straights.append(straight)
 
@@ -209,10 +211,10 @@ class Player:
                                     straight = tuple([c1, c2, c3, c4, c5])  
                                     if straight not in small_straights:  
                                         small_straights.append(straight)
-
+                                        
         small_straights = [list(s) for s in small_straights]
         big_straights = [list(s) for s in big_straights]
-
+        
         combined_straights = small_straights + big_straights
         return combined_straights
     
@@ -353,7 +355,7 @@ class Player:
                 count_threes += 1 
             elif(self.hand_to_int().count(i) == 2):                 
                 count_pairs += 1
-        
+
         return (
             comb(4,2) * comb(3,3) * count_threes * count_fours +  
             comb(4,3) * comb(3,2) * count_threes * count_fours +
@@ -366,11 +368,44 @@ class Player:
     def number_of_combinations_four_of_a_kind(self):
         temp = self.hand_to_int()
         count = 0
-        for i in range(3, 16):
+        for i in range(3, 17):
             if(temp.count(i) == 4):
                 count += comb(temp.count(i), 4) * comb(9,1)
         return count
 
+    def number_of_combinations_straight_flush(self):
+        diamond = []
+        club = []
+        heart = []
+        spade = []
+        for i, j in self.hand:
+            if(j == 'd'):
+                diamond.append(self.symbol_to_int(i))
+            elif(j == 'c'):
+                club.append(self.symbol_to_int(i))
+            elif(j == 'h'):
+                heart.append(self.symbol_to_int(i))
+            elif(j == 's'):
+                spade.append(self.symbol_to_int(i))
+        count = 0
+        if(len(diamond) >= 5):
+            for i in range(len(diamond)):
+                if(diamond[i] + 1 in diamond and diamond[i] + 2 in diamond and diamond[i] + 3 in diamond and diamond[i] + 4 in diamond):
+                    count += 1
+        if(len(club) >= 5):
+            for i in range(len(club)):
+                if(club[i] + 1 in club and club[i] + 2 in club and club[i] + 3 in club and club[i] + 4 in club):
+                    count += 1
+        if(len(heart) >= 5):
+            for i in range(len(heart)):
+                if(heart[i] + 1 in heart and heart[i] + 2 in heart and heart[i] + 3 in heart and heart[i] + 4 in heart):
+                    count += 1
+        if(len(spade) >= 5):
+            for i in range(len(spade)):
+                if(spade[i] + 1 in spade and spade[i] + 2 in spade and spade[i] + 3 in spade and spade[i] + 4 in spade):
+                    count += 1
+        return count
+    
 def main():
     deck = Deck()
     player = Player("Player 1")
@@ -389,6 +424,7 @@ def main():
     print("Combinations of flush: " + str(player.number_of_combinations_flush()))
     print("Combinations of full house: " + str(player.number_of_combinations_full_house()))
     print("Combinations of four of a kind: " + str(player.number_of_combinations_four_of_a_kind()))
+    print("Combinations of straight flush: " + str(player.number_of_combinations_straight_flush()))
 
 
     player.print_pair_combinations()
