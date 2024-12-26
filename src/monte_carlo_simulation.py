@@ -4,7 +4,7 @@ from capsa import *
 def main():
     deck = Deck()
     player = Player("test")
-    n = 10000000
+    n = 1000000
 
     result = [0] * 7
     for i in range(n):
